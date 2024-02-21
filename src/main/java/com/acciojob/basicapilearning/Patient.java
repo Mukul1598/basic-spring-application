@@ -48,4 +48,13 @@ public class Patient {
         this.age = age;
         this.disease = disease;
     }
+
+    public String toString() {
+        return "Patient{" +
+                "patientId=" + patientId +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", disease='" + disease + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package com.acciojob.basicapilearning;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-//@RequestMapping("v2")
+//@RequestMapping("v2")  :---> What is the benefit
 public class ApiClass {
 
     Map<Integer,Patient> patientDb = new HashMap<>();
@@ -22,6 +23,24 @@ public class ApiClass {
 
         return "Hi the Temperature is 21 Deg, Wind speed is 10km/h "+
                 "The humidity is 40% and feels like 18Deg, Night time";
+    }
+
+
+    @GetMapping("/findOldestPatient")
+    public Patient findOldestPatient(){
+
+        //Automatically figure out oldest patient from the DB and return
+
+        int patientId = -1;
+        int maxAge = 0;
+        for(Patient patient : patientDb.values()) {
+
+            if(patient.getAge()>maxAge){
+                patientId = patient.getPatientId();
+                maxAge = patient.getAge();
+            }
+        }
+        return patientDb.get(patientId);
     }
 
 
@@ -46,21 +65,33 @@ public class ApiClass {
     }
 
 
-
     @GetMapping("/getPatientInfo")
-    public Patient getPatientInfo(@RequestParam("patientId")Integer patientId){
+    public Patient getPatientInfo(@RequestParam(value = "patientId", required = false)Integer patientId,
+                                @RequestParam(value = "name",required = false)String name){
+
+
+        if(name!=null){
+            for(Patient patient:patientDb.values()){
+                if(patient.getName().equals(name)){
+                    return patient;
+                }
+            }
+        }
 
         Integer key = patientId;
         Patient patient = patientDb.get(key);
 
-
         System.out.println(patient);
-
         return patient;
     }
 
 
+    @GetMapping("/viewPatient/{patientId}/")
+    public String viewPatient(@PathVariable("patientId")Integer patientId) {
 
+        Patient patient = patientDb.get(patientId);
+        return patient.toString();
+    }
 
 
 
