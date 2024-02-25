@@ -1,0 +1,8 @@
+package com.acciojob.basicapilearning;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class DoctorService
+{
+}
